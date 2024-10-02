@@ -11,11 +11,10 @@ import {
 import { FeedsService } from './feeds.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Feed, FeedSchema } from './schemas/feed.schema';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Feed } from './schemas/feed.schema';
 
 @Controller('feeds')
-@ApiTags('feeds')
 export class FeedsController {
   constructor(private readonly feedsService: FeedsService) {}
 
