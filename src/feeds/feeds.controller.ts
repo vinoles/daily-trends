@@ -24,7 +24,7 @@ export class FeedsController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The feed has been successfully created.',
-    type: Feed, // Specify the response type here
+    type: Feed,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -39,7 +39,7 @@ export class FeedsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Returns a list of all feeds.',
-    type: [Feed], // Array of Feed objects
+    type: [Feed],
   })
   findAll() {
     return this.feedsService.findAll();
@@ -50,7 +50,7 @@ export class FeedsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'The feed with the specified ID.',
-    type: Feed, // Specify the response type here
+    type: Feed,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -65,7 +65,7 @@ export class FeedsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'The updated feed.',
-    type: Feed, // Specify the response type here
+    type: Feed,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
