@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateFeedDto } from './dto/create-feed.dto';
-import { EnumFeed, Feed } from './schemas/feed.schema';
+import { EnumOrigin, Feed } from './schemas/feed.schema';
 import { UpdateFeedDto } from './dto/update-feed.dto';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class FeedsService {
    *
    * @param {number} lpage
    * @param {number} limit
-   * @param {EnumFeed} origin
+   * @param {EnumOrigin} origin
    * @param {string} category
    * @param {string} sortField
    * @param {string} sortOrder
@@ -43,7 +43,7 @@ export class FeedsService {
   async findAll(
     page: number,
     limit: number,
-    origin?: EnumFeed,
+    origin?: EnumOrigin,
     category?: string,
     sortField: string = 'publishedAt',
     sortOrder: 'asc' | 'desc' = 'desc',
@@ -76,14 +76,14 @@ export class FeedsService {
    * applied per group category.
    *
    * @param {number} limit
-   * @param {EnumFeed} origin
+   * @param {EnumOrigin} origin
    * @param {string} sortOrder
    *
    * @return {Promise<any>}
    */
   async findAllGroupedByOrigin(
     limit: number = 5,
-    origin?: EnumFeed,
+    origin?: EnumOrigin,
     sortOrder: 'asc' | 'desc' = 'desc',
   ): Promise<any> {
     const sortField: string = 'publishedAt';

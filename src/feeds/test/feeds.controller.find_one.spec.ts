@@ -6,7 +6,9 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedModule } from './feed.base.testing.module';
 import { FakeFeedService } from './fake-feed.service';
+import { faker } from '@faker-js/faker/.';
 const _ = require('lodash');
+import mongoose from 'mongoose';
 
 describe('FeedsController', () => {
   let feedController: FeedsController;
@@ -22,50 +24,51 @@ describe('FeedsController', () => {
   });
 
   describe('findOne', () => {
-    /**
-     * Should return a response for id feed
-     */
     it('should return a response for id feed', async () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
-      const feed: Feed = fakeFeedService.createFakeFeed();
+      const feed: Partial<Feed> = fakeFeedService.createFakeFeed();
+
+      const feedWithId = {
+        ...feed,
+        _id: faker.string.uuid(),
+      };
 
       const result = {
         status: 'success',
-        data: feed,
+        data: feedWithId,
       };
 
-      jest.spyOn(feedService, 'findOne').mockResolvedValue(feed);
+      jest.spyOn(feedService, 'findOne').mockResolvedValue(feedWithId as Feed);
 
-      await feedController.findOne(feed._id, mockResponse as Response);
+      await feedController.findOne(feedWithId._id, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.OK);
 
       expect(mockResponse.json).toHaveBeenCalledWith(result);
     });
 
-    /**
-     * Should handle errors and return 500
-     */
     it('should handle errors and return 404', async () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
-      jest.spyOn(feedService, 'findOne');
+      const fakeId = new mongoose.Types.ObjectId();
 
-      await feedController
-        .findOne('no_found_id', mockResponse as Response)
-        .catch((error) => {
-          expect(error).toBeInstanceOf(HttpException);
-          expect(error.message).toEqual('Feed not found.');
-        });
+      jest.spyOn(feedService, 'findOne').mockResolvedValue(null);
+
+      await feedController.findOne(fakeId.toString(), mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
+
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        status: 'error',
+        message: 'Feed not found.',
+      });
     });
   });
 });

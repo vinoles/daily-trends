@@ -4,7 +4,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type CatDocument = HydratedDocument<Feed>;
 
-export enum EnumFeed {
+export enum EnumOrigin {
   COUNTRY_PAGE = 'the_country_page',
   WORD_PAGE = 'the_word_page',
   LOCAL_PAGE = 'local_page',
@@ -12,13 +12,6 @@ export enum EnumFeed {
 
 @Schema()
 export class Feed {
-  @ApiProperty({
-    description: 'ID Feed',
-    default: 'qeq34fdseqewqe1212',
-  })
-  @Prop({ required: true })
-  _id: string;
-
   @ApiProperty({
     description: 'Title of the feed',
     default: 'Lorem Ipsum Title',
@@ -65,15 +58,15 @@ export class Feed {
 
   @ApiProperty({
     description: 'Origin of the feed',
-    enum: EnumFeed,
-    default: EnumFeed.COUNTRY_PAGE,
+    enum: EnumOrigin,
+    default: EnumOrigin.COUNTRY_PAGE,
   })
   @Prop({
     required: true,
-    enum: EnumFeed,
+    enum: EnumOrigin,
     type: String,
   })
-  origin: EnumFeed;
+  origin: EnumOrigin;
 
   @ApiProperty({
     description: 'Content of the feed',

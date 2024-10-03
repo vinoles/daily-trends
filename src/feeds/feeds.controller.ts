@@ -15,7 +15,7 @@ import { FeedsService } from './feeds.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
-import { EnumFeed } from './schemas/feed.schema';
+import { EnumOrigin } from './schemas/feed.schema';
 import { Response } from 'express';
 import { FeedResponseDto, FeedResponseListDto } from '../interfaces';
 
@@ -104,7 +104,7 @@ export class FeedsController {
   @ApiQuery({
     name: 'origin',
     required: false,
-    enum: EnumFeed,
+    enum: EnumOrigin,
     description: 'Filter by feed origin',
   })
   @ApiQuery({
@@ -132,7 +132,7 @@ export class FeedsController {
    *
    * @param {number} page
    * @param {number} limit
-   * @param {EnumFeed} origin
+   * @param {EnumOrigin} origin
    * @param {string} category
    * @param {string} sortField
    * @param {string} sortOrder
@@ -145,7 +145,7 @@ export class FeedsController {
     @Query('limit') limit: number = 10,
     @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
     @Res() res: Response,
-    @Query('origin') origin?: EnumFeed,
+    @Query('origin') origin?: EnumOrigin,
     @Query('category') category?: string,
     @Query('sortField') sortField?: string,
   ): Promise<Response> {
@@ -202,7 +202,7 @@ export class FeedsController {
   @ApiQuery({
     name: 'origin',
     required: false,
-    enum: EnumFeed,
+    enum: EnumOrigin,
     description: 'Filter by feed origin',
   })
   @ApiQuery({
@@ -217,7 +217,7 @@ export class FeedsController {
    * Retrieves all feeds stored in the database grouped by origin, with a limit applied per group.
    *
    * @param {number} limit
-   * @param {EnumFeed} origin
+   * @param {EnumOrigin} origin
    * @param {string} sortOrder
    * @param {Response} res
    *
@@ -227,7 +227,7 @@ export class FeedsController {
     @Query('limit') limit: number = 5,
     @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
     @Res() res: Response,
-    @Query('origin') origin?: EnumFeed,
+    @Query('origin') origin?: EnumOrigin,
   ): Promise<Response> {
     try {
       const data = await this.feedsService.findAllGroupedByOrigin(

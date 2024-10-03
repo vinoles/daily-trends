@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsOptional, IsNotEmpty } from 'class-validator';
-import { EnumFeed } from '../schemas/feed.schema';
+import { EnumOrigin } from '../schemas/feed.schema';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateFeedDto {
@@ -55,11 +55,11 @@ export class CreateFeedDto {
 
   @ApiProperty({
     description: 'Origin of the feed',
-    enum: EnumFeed,
-    default: EnumFeed.COUNTRY_PAGE,
+    enum: EnumOrigin,
+    default: EnumOrigin.COUNTRY_PAGE,
   })
-  @IsEnum(EnumFeed)
-  readonly origin: EnumFeed;
+  @IsEnum(EnumOrigin)
+  readonly origin: EnumOrigin;
 
   @ApiProperty({
     description: 'Content of the feed',
