@@ -1,45 +1,46 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsController } from './feeds.controller';
-import { FeedsService } from './feeds.service';
-import { EnumFeed, Feed, FeedSchema } from './schemas/feed.schema';
+import { FeedsController } from '../feeds.controller';
+import { FeedsService } from '../feeds.service';
+import { Feed } from '../schemas/feed.schema';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedModule } from './feed.base.testing.module';
+import { FakeFeedService } from './fake-feed.service';
+const _ = require('lodash');
 
 describe('FeedsController', () => {
   let feedController: FeedsController;
   let feedService: FeedsService;
+  let fakeFeedService: FakeFeedService;
 
   beforeEach(async () => {
     const module: TestingModule = await createTestingFeedModule();
 
     feedController = module.get<FeedsController>(FeedsController);
     feedService = module.get(FeedsService);
+    fakeFeedService = new FakeFeedService();
   });
 
   describe('findAll', () => {
+    /**
+     * Should return a response with data list
+     */
     it('should return a response with data list', async () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
-      const feed = new Feed();
-      feed.title = 'Lorem Ipsum Title';
-      feed.subtitle = 'Lorem Ipsum Subtitle';
-      feed.category = 'technology';
-      feed.url = 'https://example.com/lorem-feed';
-      feed.urlImage = 'https://example.com/lorem-image.jpg';
-      feed.author = 'John Doe';
-      feed.origin = EnumFeed.COUNTRY_PAGE;
-      feed.content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
-      feed.publishedAt = new Date('2024-10-03T14:34:30.008Z').toISOString();
+      const feeds: Feed[] = fakeFeedService.createFakeFeeds(_.random(10, 100));
 
-      const result = { status: 'success', data: { data: [feed], total: 1 } };
+      const result = {
+        status: 'success',
+        data: { data: feeds, total: feeds.length },
+      };
 
       jest
         .spyOn(feedService, 'findAll')
-        .mockResolvedValue({ data: [feed], total: 1 });
+        .mockResolvedValue({ data: feeds, total: feeds.length });
 
       await feedController.findAll(1, 10, 'asc', mockResponse as Response);
 
@@ -48,6 +49,9 @@ describe('FeedsController', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(result);
     });
 
+    /**
+     * Should handle errors and return 500
+     */
     it('should handle errors and return 500', async () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),

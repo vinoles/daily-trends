@@ -1,5 +1,5 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsService } from './feeds.service';
+import { FeedsService } from '../feeds.service';
 import { createTestingFeedModule } from './feed.base.testing.module';
 
 describe('FeedsService', () => {
