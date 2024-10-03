@@ -17,7 +17,7 @@ import { UpdateFeedDto } from './dto/update-feed.dto';
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { EnumFeed } from './schemas/feed.schema';
 import { Response } from 'express';
-import { FeedResponseDto, FeedResponseListDto } from 'src/interfaces';
+import { FeedResponseDto, FeedResponseListDto } from '../interfaces';
 
 @Controller('feeds')
 export class FeedsController {
