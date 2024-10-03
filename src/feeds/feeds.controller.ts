@@ -38,6 +38,7 @@ export class FeedsController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'An error occurred while creating the feed.',
   })
+
   /**
    * Creates a new feed and saves it to the database.
    *
@@ -125,6 +126,7 @@ export class FeedsController {
     example: 'publishedAt',
     description: 'Field order of sorting',
   })
+
   /**
    * Retrieves all feeds stored in the database grouped by origin, with a limit applied per group.
    *
@@ -210,6 +212,7 @@ export class FeedsController {
     example: 'desc',
     description: 'Order of sorting',
   })
+
   /**
    * Retrieves all feeds stored in the database grouped by origin, with a limit applied per group.
    *
@@ -310,6 +313,7 @@ export class FeedsController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'An error occurred while updating the feed.',
   })
+
   /**
    * Updates an existing feed in the database by its ID.
    *
