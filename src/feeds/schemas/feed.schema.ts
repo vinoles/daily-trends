@@ -28,7 +28,7 @@ export class Feed {
 
   @ApiProperty({
     description: 'Category of the feed',
-    default: 'Technology',
+    default: 'technology',
     required: false,
   })
   @Prop({ required: false })

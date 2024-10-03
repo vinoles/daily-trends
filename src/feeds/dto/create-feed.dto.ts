@@ -21,7 +21,7 @@ export class CreateFeedDto {
 
   @ApiProperty({
     description: 'Category of the feed (optional)',
-    default: 'Technology',
+    default: 'technology',
     required: false,
   })
   @IsOptional()
