@@ -56,7 +56,6 @@ describe('FeedsController', () => {
         json: jest.fn(),
       };
 
-      // simulate error
       jest.spyOn(feedService, 'findOne');
 
       await feedController
