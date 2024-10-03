@@ -3,15 +3,26 @@ import { faker } from '@faker-js/faker';
 import { EnumOrigin, Feed } from '../schemas/feed.schema';
 const _ = require('lodash');
 
+/**
+ * Service class for generating fake feeds for testing purposes.
+ * This class provides methods to create individual feeds or arrays of feeds
+ * with randomized data for various categories and origins.
+ */
 @Injectable()
 export class FakeFeedService {
   categories: string[] = ['technology', 'sport', 'finance'];
+
   origins: EnumOrigin[] = [
     EnumOrigin.COUNTRY_PAGE,
     EnumOrigin.LOCAL_PAGE,
     EnumOrigin.WORD_PAGE,
   ];
 
+  /**
+   * Creates a single fake feed with random data.
+   *
+   * @returns {Feed}
+   */
   createFakeFeed(): Feed {
     return {
       title: faker.lorem.sentence(),
@@ -27,10 +38,23 @@ export class FakeFeedService {
     };
   }
 
-  createFakeFeeds(count: number): Feed[] {
-    return Array.from({ length: count }, () => this.createFakeFeed());
+  /**
+   * Creates an array of fake feeds.
+   *
+   * @param {number} count
+   * @returns {Feed[]}
+   */
+  createFakeFeeds(total: number): Feed[] {
+    return Array.from({ length: total }, () => this.createFakeFeed());
   }
 
+  /**
+   * Creates a single fake feed based on a specified category and origin.
+   *
+   * @param {string} category
+   * @param {EnumOrigin} origin
+   * @returns {Feed}
+   */
   createFakeFeedByOriginAndCategory(
     category: string,
     origin: EnumOrigin,
@@ -49,12 +73,20 @@ export class FakeFeedService {
     };
   }
 
+  /**
+   * Creates an array of fake feeds based on a specified category and origin.
+   *
+   * @param {number} total
+   * @param {string} category
+   * @param {EnumOrigin} origin
+   * @returns {Feed[]}
+   */
   createFakeFeedsByOriginAndCategory(
-    count: number,
+    total: number,
     category: string,
     origin: EnumOrigin,
   ): Feed[] {
-    return Array.from({ length: count }, () =>
+    return Array.from({ length: total }, () =>
       this.createFakeFeedByOriginAndCategory(category, origin),
     );
   }
