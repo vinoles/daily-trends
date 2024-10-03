@@ -13,6 +13,7 @@ export class FakeFeedService {
 
   createFakeFeed(): Feed {
     return {
+      _id: faker.string.uuid(),
       title: faker.lorem.sentence(),
       subtitle: faker.lorem.sentence(),
       category: this.getRandomElement(this.categories),

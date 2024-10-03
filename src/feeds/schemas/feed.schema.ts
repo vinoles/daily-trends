@@ -13,6 +13,13 @@ export enum EnumFeed {
 @Schema()
 export class Feed {
   @ApiProperty({
+    description: 'ID Feed',
+    default: 'qeq34fdseqewqe1212',
+  })
+  @Prop({ required: true })
+  _id: string;
+
+  @ApiProperty({
     description: 'Title of the feed',
     default: 'Lorem Ipsum Title',
   })
