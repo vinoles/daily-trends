@@ -14,12 +14,13 @@ import {
 import { FeedsService } from './feeds.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EnumFeed } from './schemas/feed.schema';
 import { Response } from 'express';
 import { FeedResponseDto, FeedResponseListDto } from 'src/interfaces';
 
 @Controller('feeds')
+@ApiTags('Feeds')
 export class FeedsController {
   constructor(private readonly feedsService: FeedsService) {}
 
