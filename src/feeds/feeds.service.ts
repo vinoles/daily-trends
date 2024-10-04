@@ -32,7 +32,7 @@ export class FeedsService {
   /**
    * Retrieves all feeds stored in the database.
    *
-   * @param {number} lpage
+   * @param {number} page
    * @param {number} limit
    * @param {EnumOrigin} origin
    * @param {string} category
