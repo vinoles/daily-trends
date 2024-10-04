@@ -10,6 +10,7 @@ import {
   Query,
   Res,
   HttpException,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FeedsService } from './feeds.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
@@ -48,7 +49,8 @@ export class FeedsController {
    * @return {Promise<Response>}
    */
   async create(
-    @Body() createFeedDto: CreateFeedDto,
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+    createFeedDto: CreateFeedDto,
     @Res() res: Response,
   ): Promise<Response> {
     try {
@@ -62,11 +64,10 @@ export class FeedsController {
           .status(HttpStatus.BAD_REQUEST)
           .json({ status: 'error', message: error.message });
       }
-
       throw new HttpException(
         {
           status: 'error',
-          message: 'An error occurred while creating the feed.',
+          message: error.message,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

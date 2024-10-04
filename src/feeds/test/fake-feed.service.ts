@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { EnumOrigin, Feed } from '../schemas/feed.schema';
+import { CreateFeedDto } from '../dto/create-feed.dto';
 const _ = require('lodash');
 
 /**
@@ -27,14 +28,32 @@ export class FakeFeedService {
     return {
       title: faker.lorem.sentence(),
       subtitle: faker.lorem.sentence(),
-      category: _.random(this.categories),
+      category: _.sample(this.categories),
       url: faker.internet.url(),
       urlImage: faker.internet.url(),
       author: faker.person.firstName(),
-      origin: _.random(this.origins),
+      origin: _.sample(this.origins),
       content: faker.lorem.paragraph(),
       publishedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+    };
+  }
+
+  /**
+   * Creates a single fake feed with random data.
+   *
+   * @returns {CreateFeedDto}
+   */
+  createFakeFeedDto(): CreateFeedDto {
+    return {
+      title: faker.lorem.sentence(),
+      subtitle: faker.lorem.sentence(),
+      category: _.sample(this.categories),
+      url: faker.internet.url(),
+      urlImage: faker.internet.url(),
+      author: faker.person.firstName(),
+      origin: _.sample(this.origins),
+      content: faker.lorem.paragraph(),
     };
   }
 
