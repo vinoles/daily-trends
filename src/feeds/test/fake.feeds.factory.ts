@@ -128,4 +128,32 @@ export class FakeFeedsFactory {
       this.createFakeFeedByOriginAndCategory(category, origin),
     );
   }
+
+  /**
+   * Create feeds by origin parameter and create response structure for controller
+   *
+   * @param count
+   * @param origin
+   * @returns
+   */
+  createFeedsAndMakeStructureResponse(count: number, origin: EnumOrigin): any {
+    const categoryResults = this.categories.map((category) => {
+      const feeds = this.createFakeFeedsByOriginAndCategory(
+        count,
+        category,
+        origin,
+      );
+
+      return {
+        category: category,
+        feeds: feeds,
+        total: feeds.length,
+      };
+    });
+
+    return {
+      _id: origin,
+      categories: categoryResults,
+    };
+  }
 }

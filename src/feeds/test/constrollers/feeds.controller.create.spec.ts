@@ -7,7 +7,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { createTestingFeedModule } from '../feed.base.testing.module';
+import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
 const _ = require('lodash');
 import { CreateFeedDto } from '../../dto/create-feed.dto';
@@ -18,7 +18,7 @@ describe('FeedsController', () => {
   let fakeFeedService: FakeFeedsFactory;
 
   beforeEach(async () => {
-    const module: TestingModule = await createTestingFeedModule();
+    const module: TestingModule = await createTestingFeedControllerModule();
 
     feedController = module.get<FeedsController>(FeedsController);
     feedService = module.get(FeedsService);
