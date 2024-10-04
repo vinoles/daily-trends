@@ -1,12 +1,12 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsService } from '../feeds.service';
-import { createTestingFeedModule } from './feed.base.testing.module';
+import { FeedsService } from '../../feeds.service';
+import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 
 describe('FeedsService', () => {
   let service: FeedsService;
 
   beforeEach(async () => {
-    const module: TestingModule = await createTestingFeedModule();
+    const module: TestingModule = await createTestingFeedControllerModule();
 
     service = module.get<FeedsService>(FeedsService);
   });
