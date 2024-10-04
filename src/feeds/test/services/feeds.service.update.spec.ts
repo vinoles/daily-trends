@@ -33,7 +33,7 @@ describe('FeedsService', () => {
       };
 
       (feedModel.findByIdAndUpdate as jest.Mock).mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockFeed),
+        exec: jest.fn().mockResolvedValue(feedDto),
       });
 
       const resultFind = await service.update(
@@ -41,7 +41,7 @@ describe('FeedsService', () => {
         feedDto,
       );
 
-      expect(resultFind).toEqual(mockFeed);
+      expect(resultFind).toEqual(feedDto);
     });
   });
 });
