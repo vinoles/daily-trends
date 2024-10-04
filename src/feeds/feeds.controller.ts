@@ -10,14 +10,15 @@ import {
   Query,
   Res,
   HttpException,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FeedsService } from './feeds.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { EnumFeed } from './schemas/feed.schema';
+import { EnumOrigin } from './schemas/feed.schema';
 import { Response } from 'express';
-import { FeedResponseDto, FeedResponseListDto } from 'src/interfaces';
+import { FeedResponseDto, FeedResponseListDto } from '../interfaces';
 
 @Controller('feeds')
 @ApiTags('Feeds')
@@ -48,7 +49,8 @@ export class FeedsController {
    * @return {Promise<Response>}
    */
   async create(
-    @Body() createFeedDto: CreateFeedDto,
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+    createFeedDto: CreateFeedDto,
     @Res() res: Response,
   ): Promise<Response> {
     try {
@@ -62,11 +64,10 @@ export class FeedsController {
           .status(HttpStatus.BAD_REQUEST)
           .json({ status: 'error', message: error.message });
       }
-
       throw new HttpException(
         {
           status: 'error',
-          message: 'An error occurred while creating the feed.',
+          message: error.message,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -105,7 +106,7 @@ export class FeedsController {
   @ApiQuery({
     name: 'origin',
     required: false,
-    enum: EnumFeed,
+    enum: EnumOrigin,
     description: 'Filter by feed origin',
   })
   @ApiQuery({
@@ -133,7 +134,7 @@ export class FeedsController {
    *
    * @param {number} page
    * @param {number} limit
-   * @param {EnumFeed} origin
+   * @param {EnumOrigin} origin
    * @param {string} category
    * @param {string} sortField
    * @param {string} sortOrder
@@ -146,7 +147,7 @@ export class FeedsController {
     @Query('limit') limit: number = 10,
     @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
     @Res() res: Response,
-    @Query('origin') origin?: EnumFeed,
+    @Query('origin') origin?: EnumOrigin,
     @Query('category') category?: string,
     @Query('sortField') sortField?: string,
   ): Promise<Response> {
@@ -203,7 +204,7 @@ export class FeedsController {
   @ApiQuery({
     name: 'origin',
     required: false,
-    enum: EnumFeed,
+    enum: EnumOrigin,
     description: 'Filter by feed origin',
   })
   @ApiQuery({
@@ -218,7 +219,7 @@ export class FeedsController {
    * Retrieves all feeds stored in the database grouped by origin, with a limit applied per group.
    *
    * @param {number} limit
-   * @param {EnumFeed} origin
+   * @param {EnumOrigin} origin
    * @param {string} sortOrder
    * @param {Response} res
    *
@@ -228,7 +229,7 @@ export class FeedsController {
     @Query('limit') limit: number = 5,
     @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
     @Res() res: Response,
-    @Query('origin') origin?: EnumFeed,
+    @Query('origin') origin?: EnumOrigin,
   ): Promise<Response> {
     try {
       const data = await this.feedsService.findAllGroupedByOrigin(
@@ -370,7 +371,7 @@ export class FeedsController {
    * @param {string} id
    * @return {Promise<Response> }
    */
-  async remove(
+  async delete(
     @Param('id') id: string,
     @Res() res: Response,
   ): Promise<Response> {
@@ -382,7 +383,10 @@ export class FeedsController {
           .json({ status: false, message: 'Feed not found.' });
       }
 
-      return res.status(HttpStatus.OK).json({ status: true });
+      return res.status(HttpStatus.OK).json({
+        status: true,
+        message: 'The feed has been successfully deleted.',
+      });
     } catch (error) {
       throw new HttpException(
         {
