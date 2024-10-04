@@ -1,10 +1,11 @@
 import { TestingModule } from '@nestjs/testing';
 import { FeedsService } from '../../feeds.service';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Feed } from 'src/feeds/schemas/feed.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
 import { createTestingFeedServiceModule } from '../feed.base.service.testing.module';
+import { CreateFeedDto } from 'src/feeds/dto/create-feed.dto';
 
 describe('FeedsService', () => {
   let service: FeedsService;
@@ -20,23 +21,15 @@ describe('FeedsService', () => {
     fakeFeedService = new FakeFeedsFactory();
   });
 
-  describe('findOne', () => {
-    it('should return a feed by its ID', async () => {
-      const mockFeed: Feed = fakeFeedService.createFakeFeed();
+  describe('create', () => {
+    it('should create a feed', async () => {
+      const feedDto: CreateFeedDto = fakeFeedService.createFakeFeedDto();
 
-      const feedId = new mongoose.Types.ObjectId();
-      const feedExpected = {
-        ...mockFeed,
-        _id: feedId,
-      };
+      (feedModel.create as jest.Mock).mockResolvedValue(feedDto);
 
-      (feedModel.findOne as jest.Mock).mockReturnValue({
-        exec: jest.fn().mockResolvedValue(feedExpected),
-      });
+      const resultCreated = await service.create(feedDto);
 
-      const resultSearched = await service.findOne(feedId.toString());
-
-      expect(resultSearched).toEqual(feedExpected);
+      expect(resultCreated).toEqual(feedDto);
     });
   });
 });

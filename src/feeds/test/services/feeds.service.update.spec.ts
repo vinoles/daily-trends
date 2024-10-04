@@ -36,12 +36,12 @@ describe('FeedsService', () => {
         exec: jest.fn().mockResolvedValue(feedDto),
       });
 
-      const resultFind = await service.update(
+      const resultUpdated = await service.update(
         feedExpected._id.toString(),
         feedDto,
       );
 
-      expect(resultFind).toEqual(feedDto);
+      expect(resultUpdated).toEqual(feedDto);
     });
   });
 });
