@@ -21,6 +21,7 @@ export const createTestingFeedServiceModule =
   };
 
 export const mockFeedRepository = {
+  aggregate: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
   countDocuments: jest.fn(),

@@ -35,7 +35,12 @@ describe('FeedsController', () => {
       let result: any[] = [];
       fakeFeedService.origins.forEach((origin) => {
         const feedsCount = _.random(1, 5);
-        result.push(createFeedsAndMakeStructureResponse(feedsCount, origin));
+        result.push(
+          fakeFeedService.createFeedsAndMakeStructureResponse(
+            feedsCount,
+            origin,
+          ),
+        );
       });
 
       jest
@@ -70,7 +75,7 @@ describe('FeedsController', () => {
       const origin = _.sample(fakeFeedService.origins);
 
       const feedsCount = _.random(1, 5);
-      let result: any[] = createFeedsAndMakeStructureResponse(
+      let result: any[] = fakeFeedService.createFeedsAndMakeStructureResponse(
         feedsCount,
         origin,
       );
@@ -94,36 +99,5 @@ describe('FeedsController', () => {
       expect(mockResponse.json).toHaveBeenCalled();
       expect(mockResponse.json).toHaveBeenCalledWith(expectedResult);
     });
-
-    /**
-     * Create feeds by origin parameter and create response structure for controller
-     *
-     * @param count
-     * @param origin
-     * @returns
-     */
-    function createFeedsAndMakeStructureResponse(
-      count: number,
-      origin: EnumOrigin,
-    ): any {
-      const categoryResults = fakeFeedService.categories.map((category) => {
-        const feeds = fakeFeedService.createFakeFeedsByOriginAndCategory(
-          count,
-          category,
-          origin,
-        );
-
-        return {
-          category: category,
-          feeds: feeds,
-          total: feeds.length,
-        };
-      });
-
-      return {
-        _id: origin,
-        categories: categoryResults,
-      };
-    }
   });
 });
