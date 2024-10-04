@@ -370,7 +370,7 @@ export class FeedsController {
    * @param {string} id
    * @return {Promise<Response> }
    */
-  async remove(
+  async delete(
     @Param('id') id: string,
     @Res() res: Response,
   ): Promise<Response> {
@@ -382,7 +382,10 @@ export class FeedsController {
           .json({ status: false, message: 'Feed not found.' });
       }
 
-      return res.status(HttpStatus.OK).json({ status: true });
+      return res.status(HttpStatus.OK).json({
+        status: true,
+        message: 'The feed has been successfully deleted.',
+      });
     } catch (error) {
       throw new HttpException(
         {
