@@ -1,11 +1,11 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsController } from '../feeds.controller';
-import { FeedsService } from '../feeds.service';
-import { EnumOrigin } from '../schemas/feed.schema';
+import { FeedsController } from '../../feeds.controller';
+import { FeedsService } from '../../feeds.service';
+import { EnumOrigin } from '../../schemas/feed.schema';
 import { HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import { createTestingFeedModule } from './feed.base.testing.module';
-import { FakeFeedService } from './fake-feed.service';
+import { createTestingFeedModule } from '../feed.base.testing.module';
+import { FakeFeedService } from '../fake-feed.service';
 const _ = require('lodash');
 
 describe('FeedsController', () => {

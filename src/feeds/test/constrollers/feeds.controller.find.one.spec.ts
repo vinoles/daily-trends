@@ -1,11 +1,11 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsController } from '../feeds.controller';
-import { FeedsService } from '../feeds.service';
-import { Feed } from '../schemas/feed.schema';
+import { FeedsController } from '../../feeds.controller';
+import { FeedsService } from '../../feeds.service';
+import { Feed } from '../../schemas/feed.schema';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import { createTestingFeedModule } from './feed.base.testing.module';
-import { FakeFeedService } from './fake-feed.service';
+import { createTestingFeedModule } from '../feed.base.testing.module';
+import { FakeFeedService } from '../fake-feed.service';
 import { faker } from '@faker-js/faker/.';
 const _ = require('lodash');
 import mongoose from 'mongoose';
@@ -23,7 +23,7 @@ describe('FeedsController', () => {
     fakeFeedService = new FakeFeedService();
   });
 
-  describe('delete', () => {
+  describe('findOne', () => {
     it('should return a response for id feed', async () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
@@ -38,13 +38,13 @@ describe('FeedsController', () => {
       };
 
       const result = {
-        status: true,
-        message: 'The feed has been successfully deleted.',
+        status: 'success',
+        data: feedWithId,
       };
 
-      jest.spyOn(feedService, 'delete').mockResolvedValue(feedWithId as Feed);
+      jest.spyOn(feedService, 'findOne').mockResolvedValue(feedWithId as Feed);
 
-      await feedController.delete(feedWithId._id, mockResponse as Response);
+      await feedController.findOne(feedWithId._id, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.OK);
 
@@ -59,14 +59,14 @@ describe('FeedsController', () => {
 
       const fakeId = new mongoose.Types.ObjectId();
 
-      jest.spyOn(feedService, 'delete').mockResolvedValue(null);
+      jest.spyOn(feedService, 'findOne').mockResolvedValue(null);
 
-      await feedController.delete(fakeId.toString(), mockResponse as Response);
+      await feedController.findOne(fakeId.toString(), mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
 
       expect(mockResponse.json).toHaveBeenCalledWith({
-        status: false,
+        status: 'error',
         message: 'Feed not found.',
       });
     });

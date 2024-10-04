@@ -1,16 +1,19 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsController } from '../feeds.controller';
-import { FeedsService } from '../feeds.service';
+import { FeedsController } from '../../feeds.controller';
+import { FeedsService } from '../../feeds.service';
 import {
   BadRequestException,
   HttpStatus,
   ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { createTestingFeedModule } from './feed.base.testing.module';
-import { FakeFeedService } from './fake-feed.service';
+import { createTestingFeedModule } from '../feed.base.testing.module';
+import { FakeFeedService } from '../fake-feed.service';
 const _ = require('lodash');
-import { CreateFeedDto } from '../dto/create-feed.dto';
+
+import { UpdateFeedDto } from '../../dto/update-feed.dto';
+import { Feed } from '../../schemas/feed.schema';
+import { faker } from '@faker-js/faker/.';
 
 describe('FeedsController', () => {
   let feedController: FeedsController;
@@ -25,18 +28,38 @@ describe('FeedsController', () => {
     fakeFeedService = new FakeFeedService();
   });
 
-  describe('create', () => {
+  describe('update', () => {
     it('should return a response for id feed', async () => {
       const mockResponse: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
-      const feedDto: CreateFeedDto = fakeFeedService.createFakeFeedDto();
+      const feedDto: UpdateFeedDto = fakeFeedService.updateFakeFeedDto();
 
-      jest.spyOn(feedService, 'create');
+      const feed: Partial<Feed> = fakeFeedService.createFakeFeed();
 
-      await feedController.create(feedDto, mockResponse as Response);
+      const feedWithId = {
+        ...feed,
+        _id: faker.string.uuid(),
+      };
+
+      const result = {
+        status: 'success',
+        data: feedWithId,
+      };
+
+      jest.spyOn(feedService, 'update').mockResolvedValue(feedWithId as Feed);
+
+      await feedController.update(
+        feedWithId._id,
+        feedDto,
+        mockResponse as Response,
+      );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.OK);
+
+      expect(mockResponse.json).toHaveBeenCalledWith(result);
     });
 
     it('should handle errors and return 400', async () => {
@@ -45,7 +68,8 @@ describe('FeedsController', () => {
         json: jest.fn(),
       };
 
-      let feedDto: CreateFeedDto = fakeFeedService.createFakeFeedDto();
+      let feedDto: UpdateFeedDto = fakeFeedService.updateFakeFeedDto();
+
       feedDto = {
         ...feedDto,
         origin: _.random(fakeFeedService.origins),
@@ -59,10 +83,27 @@ describe('FeedsController', () => {
       try {
         await validationPipe.transform(feedDto, {
           type: 'body',
-          metatype: CreateFeedDto,
+          metatype: UpdateFeedDto,
         });
 
-        await feedController.create(feedDto, mockResponse as Response);
+        const feed: Partial<Feed> = fakeFeedService.createFakeFeed();
+
+        const feedWithId = {
+          ...feed,
+          _id: faker.string.uuid(),
+        };
+
+        const result = {
+          status: 'success',
+          data: feedWithId,
+        };
+
+        jest.spyOn(feedService, 'update').mockResolvedValue(feedWithId as Feed);
+        await feedController.update(
+          feedWithId._id,
+          feedDto,
+          mockResponse as Response,
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.message).toEqual('Bad Request Exception');

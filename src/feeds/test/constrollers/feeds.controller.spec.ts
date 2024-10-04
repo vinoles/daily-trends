@@ -1,7 +1,7 @@
 import { TestingModule } from '@nestjs/testing';
-import { FeedsController } from '../feeds.controller';
-import { FeedsService } from '../feeds.service';
-import { createTestingFeedModule } from './feed.base.testing.module';
+import { FeedsController } from '../../feeds.controller';
+import { FeedsService } from '../../feeds.service';
+import { createTestingFeedModule } from '../feed.base.testing.module';
 
 describe('FeedsController', () => {
   let feedController: FeedsController;
