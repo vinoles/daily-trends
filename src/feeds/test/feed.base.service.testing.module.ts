@@ -23,8 +23,8 @@ export const createTestingFeedServiceModule =
 export const mockFeedRepository = {
   create: jest.fn(),
   update: jest.fn(),
-  findAll: jest.fn(),
-  findAllGroupedByOrigin: jest.fn(),
+  countDocuments: jest.fn(),
+  find: jest.fn(),
   findOne: jest.fn(),
   delete: jest.fn(),
 };

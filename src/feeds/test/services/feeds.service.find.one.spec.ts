@@ -1,13 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
 import { FeedsService } from '../../feeds.service';
 import mongoose, { Model } from 'mongoose';
 import { Feed } from 'src/feeds/schemas/feed.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
-import {
-  createTestingFeedServiceModule,
-  mockFeedRepository,
-} from '../feed.base.service.testing.module';
+import { createTestingFeedServiceModule } from '../feed.base.service.testing.module';
 
 describe('FeedsService', () => {
   let service: FeedsService;
@@ -28,19 +25,18 @@ describe('FeedsService', () => {
       const mockFeed: Feed = fakeFeedService.createFakeFeed();
 
       const feedId = new mongoose.Types.ObjectId();
-      const feedWithId = {
+      const feedExpected = {
         ...mockFeed,
         _id: feedId,
       };
 
-      // Simulate return type feed
       (feedModel.findOne as jest.Mock).mockReturnValue({
-        exec: jest.fn().mockResolvedValue(feedWithId),
+        exec: jest.fn().mockResolvedValue(feedExpected),
       });
 
       const result = await service.findOne(feedId.toString());
 
-      expect(result).toEqual(feedWithId);
+      expect(result).toEqual(feedExpected);
     });
   });
 });
