@@ -11,7 +11,7 @@ const _ = require('lodash');
  * with randomized data for various categories and origins.
  */
 @Injectable()
-export class FakeFeedService {
+export class FakeFeedsFactory {
   categories: string[] = ['technology', 'sport', 'finance'];
 
   origins: EnumOrigin[] = [

@@ -5,20 +5,21 @@ import { EnumOrigin } from '../../schemas/feed.schema';
 import { HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedModule } from '../feed.base.testing.module';
-import { FakeFeedService } from '../fake-feed.service';
+import { FakeFeedsFactory } from '../fake.feeds.factory';
+
 const _ = require('lodash');
 
 describe('FeedsController', () => {
   let feedController: FeedsController;
   let feedService: FeedsService;
-  let fakeFeedService: FakeFeedService;
+  let fakeFeedService: FakeFeedsFactory;
 
   beforeEach(async () => {
     const module: TestingModule = await createTestingFeedModule();
 
     feedController = module.get<FeedsController>(FeedsController);
     feedService = module.get(FeedsService);
-    fakeFeedService = new FakeFeedService();
+    fakeFeedService = new FakeFeedsFactory();
   });
 
   describe('findAllGroupedByOrigin', () => {
@@ -31,14 +32,8 @@ describe('FeedsController', () => {
         json: jest.fn(),
       };
 
-      const origins = [
-        EnumOrigin.COUNTRY_PAGE,
-        EnumOrigin.LOCAL_PAGE,
-        EnumOrigin.WORD_PAGE,
-      ];
-
       let result: any[] = [];
-      origins.forEach((origin) => {
+      fakeFeedService.origins.forEach((origin) => {
         const feedsCount = _.random(1, 5);
         result.push(createFeedsAndMakeStructureResponse(feedsCount, origin));
       });
@@ -72,13 +67,7 @@ describe('FeedsController', () => {
         json: jest.fn(),
       };
 
-      const origins = [
-        EnumOrigin.COUNTRY_PAGE,
-        EnumOrigin.LOCAL_PAGE,
-        EnumOrigin.WORD_PAGE,
-      ];
-
-      const origin = _.sample(origins);
+      const origin = _.sample(fakeFeedService.origins);
 
       const feedsCount = _.random(1, 5);
       let result: any[] = createFeedsAndMakeStructureResponse(
@@ -117,8 +106,7 @@ describe('FeedsController', () => {
       count: number,
       origin: EnumOrigin,
     ): any {
-      const categories = ['technology', 'sport', 'finance'];
-      const categoryResults = categories.map((category) => {
+      const categoryResults = fakeFeedService.categories.map((category) => {
         const feeds = fakeFeedService.createFakeFeedsByOriginAndCategory(
           count,
           category,

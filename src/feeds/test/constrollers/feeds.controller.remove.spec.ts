@@ -5,7 +5,7 @@ import { Feed } from '../../schemas/feed.schema';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedModule } from '../feed.base.testing.module';
-import { FakeFeedService } from '../fake-feed.service';
+import { FakeFeedsFactory } from '../fake.feeds.factory';
 import { faker } from '@faker-js/faker/.';
 const _ = require('lodash');
 import mongoose from 'mongoose';
@@ -13,14 +13,14 @@ import mongoose from 'mongoose';
 describe('FeedsController', () => {
   let feedController: FeedsController;
   let feedService: FeedsService;
-  let fakeFeedService: FakeFeedService;
+  let fakeFeedService: FakeFeedsFactory;
 
   beforeEach(async () => {
     const module: TestingModule = await createTestingFeedModule();
 
     feedController = module.get<FeedsController>(FeedsController);
     feedService = module.get(FeedsService);
-    fakeFeedService = new FakeFeedService();
+    fakeFeedService = new FakeFeedsFactory();
   });
 
   describe('delete', () => {
