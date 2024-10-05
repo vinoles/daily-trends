@@ -30,6 +30,22 @@ export class FeedsService {
   }
 
   /**
+   * Creates a new feed and saves it to the database.
+   *
+   * @param {CreateFeedDto} createFeedDto
+   * @return {Promise<Feed>}
+   */
+  async createFromExternal(
+    createFeedDto: CreateFeedDto,
+    publishedAt: string,
+    updatedAt?: string,
+  ): Promise<Feed> {
+    const feedData = { ...createFeedDto, publishedAt, updatedAt };
+    const createdFeed = await this.feedModel.create(feedData);
+    return createdFeed;
+  }
+
+  /**
    * Retrieves all feeds stored in the database.
    *
    * @param {number} page
@@ -45,6 +61,7 @@ export class FeedsService {
     limit: number,
     origin?: EnumOrigin,
     category?: string,
+    url?: string,
     sortField: string = 'publishedAt',
     sortOrder: 'asc' | 'desc' = 'desc',
   ): Promise<{ data: Feed[]; total: number }> {
@@ -57,6 +74,10 @@ export class FeedsService {
 
     if (category) {
       filter.category = category;
+    }
+
+    if (url) {
+      filter.url = url;
     }
 
     const sort: { [key: string]: 1 | -1 } = {
