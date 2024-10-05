@@ -14,6 +14,18 @@ import { FeedsService } from '../feeds.service';
 export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(ScraperServiceCron.name);
   private cronJob: CronJob;
+  private agent: string =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
+
+  private launchOptions = {
+    headless: true,
+    timeout: 10000,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+    ],
+  };
 
   constructor(private readonly feedsService: FeedsService) {}
 
@@ -41,7 +53,12 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   }
 
   async handleCron() {
-    const excludeSectionsCountryPage: string[] = [
+    this.runTheCountryPageScrape();
+    this.runTheWordPageScrape();
+  }
+
+  async runTheCountryPageScrape() {
+    const excludeSectionsPage: string[] = [
       'portada_cross-linking',
       'portada_tematicos_pasatiempos-en-el-pais',
       'portada_tematicos_el-pais-expres',
@@ -50,34 +67,42 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
 
     const [width, height] = [1920, 1080];
 
-    const agent: string =
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
+    const browser = await puppeteer.launch(this.launchOptions);
 
-    const countryBrowser = await puppeteer.launch({
-      headless: true,
-      timeout: 10000,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-      ],
-    });
+    const page: Page = await browser.newPage();
 
-    const countryPage: Page = await countryBrowser.newPage();
-
-    await countryPage.setViewport({ width, height });
+    await page.setViewport({ width, height });
 
     const scrapeTheCountryPage = new ScraperTheCountryPage(
-      countryBrowser,
-      countryPage,
-      agent,
-      excludeSectionsCountryPage,
+      browser,
+      page,
+      this.agent,
+      excludeSectionsPage,
       this.feedsService,
     );
 
     await scrapeTheCountryPage.processPage();
+  }
 
-    const scrapeTheWordPage = new ScraperTheWordPage();
+  async runTheWordPageScrape() {
+    const excludeSectionsPage: string[] = ['autor', ''];
+
+    const [width, height] = [1920, 1080];
+
+    const browser = await puppeteer.launch(this.launchOptions);
+
+    const page: Page = await browser.newPage();
+
+    await page.setViewport({ width, height });
+
+    const scrapeTheWordPage = new ScraperTheWordPage(
+      browser,
+      page,
+      this.agent,
+      excludeSectionsPage,
+      this.feedsService,
+    );
+
     await scrapeTheWordPage.processPage();
   }
 }
