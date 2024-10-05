@@ -1,15 +1,15 @@
-import puppeteer, { Page, Browser } from 'puppeteer';
+import { Page, Browser } from 'puppeteer';
 import {
   CategoryPage,
   CategoryPageCountryArticles,
   PageCountryArticle,
 } from '../ScraperPageInterface';
-import { EnumOrigin, Feed } from '../../schemas/feed.schema';
+import { EnumOrigin } from '../../schemas/feed.schema';
 import { FeedsService } from '../../feeds.service';
 import { CreateFeedDto } from '../../dto/create-feed.dto';
 import { ScraperPage } from '../ScraperPage';
 
-export class ScraperTheHelperCountry extends ScraperPage {
+export class HelperCountryPage extends ScraperPage {
   constructor(
     browser: Browser,
     page: Page,

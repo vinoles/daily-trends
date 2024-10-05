@@ -116,6 +116,12 @@ export class FeedsController {
     description: 'category',
   })
   @ApiQuery({
+    name: 'url',
+    required: false,
+    example: 'https://example.com/lorem-feed',
+    description: 'Url external page',
+  })
+  @ApiQuery({
     name: 'sortOrder',
     required: false,
     enum: ['asc', 'desc'],

@@ -1,8 +1,8 @@
 import { ScraperPageInterface } from '../ScraperPageInterface';
-import { ScraperTheHelperCountry } from './ScraperTheHelperCountry';
+import { HelperCountryPage } from './HelperCountryPage';
 
 export class ScraperTheCountryPage
-  extends ScraperTheHelperCountry
+  extends HelperCountryPage
   implements ScraperPageInterface
 {
   async processPage(): Promise<void> {
