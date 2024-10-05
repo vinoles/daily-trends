@@ -1,19 +1,46 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import {
+  Injectable,
+  Logger,
+  OnModuleInit,
+  OnModuleDestroy,
+} from '@nestjs/common';
+import { CronJob } from 'cron';
 import { ScraperTheCountryPage } from './country-page/ScraperTheCountryPage';
 import { ScraperTheWordPage } from './word-page/ScraperTheWordPage';
 import puppeteer, { Page } from 'puppeteer';
 import { FeedsService } from '../feeds.service';
 
 @Injectable()
-export class ScraperServiceCron {
-  constructor(private readonly feedsService: FeedsService) {}
+export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(ScraperServiceCron.name);
+  private cronJob: CronJob;
 
-  // @Cron('*/5 * * * *')
-  @Cron('25 12 * * *')
+  constructor(private readonly feedsService: FeedsService) {}
+
+  async onModuleInit() {
+    const cronExpression = process.env.INIT_SCRAPER_PAGES || '0 6 * * *';
+
+    this.cronJob = new CronJob(cronExpression, async () => {
+      this.logger.debug(
+        'Called when the current every 5 minutes or custom schedule',
+      );
+      this.handleCron();
+    });
+
+    this.cronJob.start();
+    this.logger.debug(
+      `Cron job initialized with expression: ${cronExpression}`,
+    );
+  }
+
+  onModuleDestroy() {
+    if (this.cronJob) {
+      this.cronJob.stop();
+      this.logger.debug('Cron job stopped');
+    }
+  }
+
   async handleCron() {
-    this.logger.debug('Called when the current every 5 minutes');
     const excludeSectionsCountryPage: string[] = [
       'portada_cross-linking',
       'portada_tematicos_pasatiempos-en-el-pais',
@@ -48,9 +75,9 @@ export class ScraperServiceCron {
       this.feedsService,
     );
 
-    scrapeTheCountryPage.processPage();
+    await scrapeTheCountryPage.processPage();
 
     const scrapeTheWordPage = new ScraperTheWordPage();
-    scrapeTheWordPage.processPage();
+    await scrapeTheWordPage.processPage();
   }
 }
