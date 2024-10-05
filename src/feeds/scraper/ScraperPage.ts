@@ -6,7 +6,6 @@ export class ScraperPage {
   public page: Page;
   public agent: string;
   public feedService: FeedsService;
-
   public excludeSections: string[];
 
   /**
@@ -15,6 +14,7 @@ export class ScraperPage {
    * @param {Browser} browser
    * @param {Page} page
    * @param {string} agent
+   * @param {string[]} excludeSections
    * @param {FeedsService} feedService
    */
   constructor(
