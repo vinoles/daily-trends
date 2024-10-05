@@ -1,4 +1,4 @@
-import { ScraperPageInterface } from './ScraperPageInterface';
+import { ScraperPageInterface } from '../ScraperPageInterface';
 import { ScraperTheHelperCountry } from './ScraperTheHelperCountry';
 
 export class ScraperTheCountryPage
@@ -15,6 +15,7 @@ export class ScraperTheCountryPage
       });
 
       const consentSelector = '.pmConsentWall-button';
+
       const consentElement = await this.page.$(consentSelector);
 
       if (consentElement != null) {

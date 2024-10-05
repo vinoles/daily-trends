@@ -3,43 +3,21 @@ import {
   CategoryPage,
   CategoryPageCountryArticles,
   PageCountryArticle,
-} from './ScraperPageInterface';
-import { EnumOrigin, Feed } from '../schemas/feed.schema';
-import { FeedsService } from '../feeds.service';
-import { CreateFeedDto } from '../dto/create-feed.dto';
+} from '../ScraperPageInterface';
+import { EnumOrigin, Feed } from '../../schemas/feed.schema';
+import { FeedsService } from '../../feeds.service';
+import { CreateFeedDto } from '../../dto/create-feed.dto';
+import { ScraperPage } from '../ScraperPage';
 
-export class ScraperTheHelperCountry {
-  public browser: Browser;
-  public page: Page;
-  public agent: string;
-  public feedService: FeedsService;
-
-  private excludeSections: string[];
-
-  /**
-   * Constructor to initialize
-   *
-   * @param {Browser} browser
-   * @param {Page} page
-   * @param {string} agent
-   * @param {FeedsService} feedService
-   */
+export class ScraperTheHelperCountry extends ScraperPage {
   constructor(
     browser: Browser,
     page: Page,
     agent: string,
+    excludeSections: string[],
     feedService: FeedsService,
   ) {
-    this.browser = browser;
-    this.page = page;
-    this.agent = agent;
-    this.feedService = feedService;
-    this.excludeSections = [
-      'portada_cross-linking',
-      'portada_tematicos_pasatiempos-en-el-pais',
-      'portada_tematicos_el-pais-expres',
-      '',
-    ];
+    super(browser, page, agent, excludeSections, feedService);
   }
 
   /**
@@ -110,26 +88,6 @@ export class ScraperTheHelperCountry {
         }
       }
     }
-  }
-
-  /**
-   * Open a detailed page for an article.
-   *
-   * @param {string} url
-   * @returns {Promise<Page>}
-   */
-  private async openDetailPage(url: string): Promise<Page> {
-    const detailBrowser = await puppeteer.launch({
-      headless: true,
-      args: ['--start-maximized'],
-    });
-    const page: Page = await detailBrowser.newPage();
-    await page.setUserAgent(this.agent);
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 20000, // Increases timeout for slow pages.
-    });
-    return page;
   }
 
   /**
@@ -239,7 +197,6 @@ export class ScraperTheHelperCountry {
     try {
       detailPage = await this.openDetailPage(pageCountryArticle.url ?? '');
 
-      // Extract article content
       const {
         title,
         subtitle,
@@ -267,7 +224,7 @@ export class ScraperTheHelperCountry {
         updatedAt,
       );
 
-      console.log('process new feed:', feed);
+      console.log('processed new feed for the country page:', feed.url);
     } catch (error) {
       console.error(
         `Error processing article at ${pageCountryArticle.url}:`,
@@ -279,34 +236,4 @@ export class ScraperTheHelperCountry {
       }
     }
   }
-
-  /**
-   * Get the text content of an element on the page.
-   *
-   * @param {Page} page
-   * @param {string} selector
-   * @returns {Promise<string>}
-   */
-  private getTextContent = async (
-    page: Page,
-    selector: string,
-  ): Promise<string> => {
-    return (
-      (await page.$eval(selector, (el) => el.textContent?.trim() || '')) || ''
-    );
-  };
-
-  /**
-   * Get the src attribute of an image on the page.
-   *
-   * @param {Page} page
-   * @param {string} selector
-   * @returns {Promise<string>}
-   */
-  private getImageSrc = async (
-    page: Page,
-    selector: string,
-  ): Promise<string> => {
-    return await page.$eval(selector, (el: any) => el.src);
-  };
 }

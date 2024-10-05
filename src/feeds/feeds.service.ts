@@ -61,6 +61,7 @@ export class FeedsService {
     limit: number,
     origin?: EnumOrigin,
     category?: string,
+    url?: string,
     sortField: string = 'publishedAt',
     sortOrder: 'asc' | 'desc' = 'desc',
   ): Promise<{ data: Feed[]; total: number }> {
@@ -73,6 +74,10 @@ export class FeedsService {
 
     if (category) {
       filter.category = category;
+    }
+
+    if (url) {
+      filter.url = url;
     }
 
     const sort: { [key: string]: 1 | -1 } = {

@@ -1,4 +1,4 @@
-import { ScraperPageInterface } from './ScraperPageInterface';
+import { ScraperPageInterface } from '../ScraperPageInterface';
 
 export class ScraperTheWordPage implements ScraperPageInterface {
   async processPage(): Promise<void> {

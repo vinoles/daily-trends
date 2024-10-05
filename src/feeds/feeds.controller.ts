@@ -76,7 +76,7 @@ export class FeedsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Retrieve all feeds grouped by origin',
+    summary: 'Retrieve all feeds',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -149,6 +149,7 @@ export class FeedsController {
     @Res() res: Response,
     @Query('origin') origin?: EnumOrigin,
     @Query('category') category?: string,
+    @Query('url') url?: string,
     @Query('sortField') sortField?: string,
   ): Promise<Response> {
     try {
@@ -157,6 +158,7 @@ export class FeedsController {
         limit,
         origin,
         category,
+        url,
         sortField,
         sortOrder,
       );
