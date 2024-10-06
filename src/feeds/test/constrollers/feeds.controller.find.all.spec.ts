@@ -6,7 +6,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
-const _ = require('lodash');
+import _ from 'lodash';
 
 describe('FeedsController', () => {
   let feedController: FeedsController;

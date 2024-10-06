@@ -33,7 +33,7 @@ export class ScraperTheWordPage
         this.extractArticleContent.bind(this),
       );
     } catch (error) {
-      console.error('Error durante el scrapingAA:', error);
+      console.error('Error in scraping the word page:', error);
     } finally {
       await this.browser.close();
     }
@@ -44,7 +44,7 @@ export class ScraperTheWordPage
    * @param {Page} detailPage
    * @returns {Promise<Object>}
    */
-  async extractArticleContent(detailPage: Page): Promise<Object> {
+  async extractArticleContent(detailPage: Page): Promise<object> {
     const baseElements = 'body > main';
     const title = await this.getTextContent(
       detailPage,

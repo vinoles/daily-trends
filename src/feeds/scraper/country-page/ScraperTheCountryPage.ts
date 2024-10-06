@@ -37,7 +37,7 @@ export class ScraperTheCountryPage
         this.extractArticleContent.bind(this),
       );
     } catch (error) {
-      console.error('Error durante el scraping:', error);
+      console.error('Error in scraping the country page:', error);
     } finally {
       await this.browser.close();
     }
@@ -48,7 +48,7 @@ export class ScraperTheCountryPage
    * @param {Page} detailPage
    * @returns {Promise<Object>}
    */
-  async extractArticleContent(detailPage: Page): Promise<Object> {
+  async extractArticleContent(detailPage: Page): Promise<object> {
     const title = await this.getTextContent(
       detailPage,
       'body > article > header > div > h1',
@@ -85,9 +85,6 @@ export class ScraperTheCountryPage
     } else if (elementUrlImageOptionTwo != null) {
       urlImage = await this.getImageSrc(detailPage, selectorImageOptionTwo);
     }
-
-    const selectorElementTitleImageFooter =
-      'body > article > header > div > figure > figcaption';
 
     const elementWithPublishedAt = await detailPage.$('[data-date]');
 

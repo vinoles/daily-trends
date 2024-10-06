@@ -9,7 +9,7 @@ import {
 import { Response } from 'express';
 import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
-const _ = require('lodash');
+import _ from 'lodash';
 import { CreateFeedDto } from '../../dto/create-feed.dto';
 
 describe('FeedsController', () => {

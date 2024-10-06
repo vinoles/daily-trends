@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app-dayly-trends:
+    container_name: app-dayly-trends
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${FORWARD_APP_PORT:-3000}:3000"
+    depends_on:
+      - mongo-dayly-trends
+    volumes:
+      - .:/app
+    command: npm run start:dev
+
+  mongo-dayly-trends:
+    container_name: mongo-dayly-trends
+    image: mongo:latest
+    ports:
+      - "${FORWARD_DB_PORT:-27017}:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: feedsdb
+
+volumes:
+  mongo-data:
+    driver: local

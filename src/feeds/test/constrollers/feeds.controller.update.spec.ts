@@ -9,7 +9,7 @@ import {
 import { Response } from 'express';
 import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
-const _ = require('lodash');
+import _ from 'lodash';
 
 import { UpdateFeedDto } from '../../dto/update-feed.dto';
 import { Feed } from '../../schemas/feed.schema';
@@ -91,11 +91,6 @@ describe('FeedsController', () => {
         const feedWithId = {
           ...feed,
           _id: faker.string.uuid(),
-        };
-
-        const result = {
-          status: 'success',
-          data: feedWithId,
         };
 
         jest.spyOn(feedService, 'update').mockResolvedValue(feedWithId as Feed);

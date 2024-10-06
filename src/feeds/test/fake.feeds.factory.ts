@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { EnumOrigin, Feed } from '../schemas/feed.schema';
 import { CreateFeedDto } from '../dto/create-feed.dto';
 import { UpdateFeedDto } from '../dto/update-feed.dto';
-const _ = require('lodash');
+import _ from 'lodash';
 
 /**
  * Service class for generating fake feeds for testing purposes.

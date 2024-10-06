@@ -6,80 +6,85 @@
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## DailyTrends API Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## API Name: DailyTrends
 
-## Project setup
+### Description:
+
+DailyTrends is a news aggregator API that provides users with a curated feed of the latest headlines from leading newspapers. The API focuses on delivering the top five headlines from two prominent Spanish newspapers, El País and El Mundo.
+
+## Project setup in Makefile
 
 ```bash
-$ npm install
+$ make up
 ```
 
-## Compile and run the project
+## Commands
 
 ```bash
-# development
-$ npm run start
 
-# watch mode
-$ npm run start:dev
+# Start all containers in detached mode (running in the background)
+$ make up
 
-# production mode
-$ npm run start:prod
+# Build or rebuild services and start containers (useful after Dockerfile changes)
+$ make build
+
+# Stop all running containers without removing them (containers can be restarted later)
+$ make stop
+
+# Stop and remove all containers, networks, and volumes
+$ make down
+
+# Start a bash session inside the application container
+$ make bash
+
+# Restart all containers (stop and then start again)
+$ make restart
+
+# Display live logs from all running containers (press Ctrl+C to stop viewing logs)
+$ make logs
+
+# Open a shell inside the app container (useful for debugging)
+$ make exec
+
+# Run 'npm install' inside the app container to install dependencies
+$ make exec-install
+
+# Run the app in development mode inside the container
+$ make exec-start
+
+# Run the app in watch mode (auto-restart on changes) inside the container
+$ make exec-dev
+
+# Build the application inside the container
+$ make exec-build
+
+# Run linters inside the container to verify code quality
+$ make exec-lint
+
+# Run tests inside the container
+$ make exec-test
+
+# Run any custom command inside the app container (example: 'make exec-cmd cmd="npm run lint"')
+$ make exec-cmd cmd="your-command-here"
+
 ```
+## Open
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
+[http://localhost:3001/api](http://localhost:3001/api)
 
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
 
 - Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Puppeteer Visit the [Puppeteer Documentation](https://pptr.dev/category/introduction) to learn more about the package.
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Felipe Vinoles](https://www.linkedin.com/in/felipe-vi%C3%B1oles-51731137/)
 
-## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
