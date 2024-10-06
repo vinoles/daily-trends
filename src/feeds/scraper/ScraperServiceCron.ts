@@ -30,18 +30,15 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     const cronExpression = process.env.INIT_SCRAPER_PAGES || '0 6 * * *';
 
-    // this.cronJob = new CronJob(cronExpression, async () => {
-    //   this.logger.debug(
-    //     'Called when the current every 5 minutes or custom schedule',
-    //   );
-    //   this.handleCron();
-    // });
+    this.cronJob = new CronJob(cronExpression, async () => {
+      this.handleCron();
+    });
 
-    // this.cronJob.start();
+    this.cronJob.start();
+
     this.logger.debug(
-      `Cron job initialized with expression nww : ${cronExpression}`,
+      `Cron job initialized with expression : ${cronExpression}`,
     );
-    this.handleCron();
   }
 
   onModuleDestroy() {
@@ -52,7 +49,7 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   }
 
   async handleCron() {
-    this.logger.debug(`Cron job initialized .....`);
+    this.logger.debug(`Cron job initialized`);
     this.runTheCountryPageScrape();
     this.runTheWordPageScrape();
   }
