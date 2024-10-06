@@ -7,7 +7,7 @@ import {
 import { CronJob } from 'cron';
 import { ScraperTheCountryPage } from './country-page/ScraperTheCountryPage';
 import { ScraperTheWordPage } from './word-page/ScraperTheWordPage';
-import puppeteer, { Page } from 'puppeteer';
+import puppeteer, { Page, PuppeteerLaunchOptions } from 'puppeteer';
 import { FeedsService } from '../feeds.service';
 
 @Injectable()
@@ -17,14 +17,12 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   private agent: string =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
 
-  private launchOptions = {
+  private launchOptions: PuppeteerLaunchOptions = {
+    executablePath: process.env.GOOGLE_CHROME_BIN,
     headless: true,
-    timeout: 10000,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-    ],
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    timeout: 20000,
+    protocolTimeout: 40000,
   };
 
   constructor(private readonly feedsService: FeedsService) {}
@@ -32,17 +30,18 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     const cronExpression = process.env.INIT_SCRAPER_PAGES || '0 6 * * *';
 
-    this.cronJob = new CronJob(cronExpression, async () => {
-      this.logger.debug(
-        'Called when the current every 5 minutes or custom schedule',
-      );
-      this.handleCron();
-    });
+    // this.cronJob = new CronJob(cronExpression, async () => {
+    //   this.logger.debug(
+    //     'Called when the current every 5 minutes or custom schedule',
+    //   );
+    //   this.handleCron();
+    // });
 
-    this.cronJob.start();
+    // this.cronJob.start();
     this.logger.debug(
-      `Cron job initialized with expression: ${cronExpression}`,
+      `Cron job initialized with expression nww : ${cronExpression}`,
     );
+    this.handleCron();
   }
 
   onModuleDestroy() {
@@ -53,6 +52,7 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
   }
 
   async handleCron() {
+    this.logger.debug(`Cron job initialized .....`);
     this.runTheCountryPageScrape();
     this.runTheWordPageScrape();
   }
@@ -66,7 +66,7 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
     ];
 
     const [width, height] = [1920, 1080];
-
+    puppeteer.executablePath();
     const browser = await puppeteer.launch(this.launchOptions);
 
     const page: Page = await browser.newPage();

@@ -5,7 +5,7 @@ import { Feed } from 'src/feeds/schemas/feed.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
 import { createTestingFeedServiceModule } from '../feed.base.service.testing.module';
-const _ = require('lodash');
+import _ from 'lodash';
 
 describe('FeedsService', () => {
   let service: FeedsService;

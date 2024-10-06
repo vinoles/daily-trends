@@ -2,12 +2,11 @@ import { TestingModule } from '@nestjs/testing';
 import { FeedsController } from '../../feeds.controller';
 import { FeedsService } from '../../feeds.service';
 import { Feed } from '../../schemas/feed.schema';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
 import { faker } from '@faker-js/faker/.';
-const _ = require('lodash');
 import mongoose from 'mongoose';
 
 describe('FeedsController', () => {

@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from 'puppeteer';
+import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from 'puppeteer';
 import { FeedsService } from '../feeds.service';
 import { PageArticle } from './ScraperPageInterface';
 import { CreateFeedDto } from '../dto/create-feed.dto';
@@ -10,6 +10,14 @@ export class ScraperPage {
   public agent: string;
   public feedService: FeedsService;
   public excludeSections: string[];
+
+  private launchOptions: PuppeteerLaunchOptions = {
+    executablePath: process.env.GOOGLE_CHROME_BIN,
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    timeout: 20000,
+    protocolTimeout: 40000,
+  };
 
   /**
    * Constructor to initialize
@@ -131,12 +139,11 @@ export class ScraperPage {
    * @returns {Promise<Page>}
    */
   public async openDetailPage(url: string): Promise<Page> {
-    const detailBrowser = await puppeteer.launch({
-      headless: true,
-      args: ['--start-maximized'],
-    });
+    const detailBrowser = await puppeteer.launch(this.launchOptions);
+
     const page: Page = await detailBrowser.newPage();
     await page.setUserAgent(this.agent);
+
     await page.goto(url, {
       waitUntil: 'networkidle2',
       timeout: 20000, // Increases timeout for slow pages.

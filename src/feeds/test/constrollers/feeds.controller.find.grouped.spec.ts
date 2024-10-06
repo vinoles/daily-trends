@@ -1,13 +1,11 @@
 import { TestingModule } from '@nestjs/testing';
 import { FeedsController } from '../../feeds.controller';
 import { FeedsService } from '../../feeds.service';
-import { EnumOrigin } from '../../schemas/feed.schema';
 import { HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { createTestingFeedControllerModule } from '../feed.base.controller.testing.module';
 import { FakeFeedsFactory } from '../fake.feeds.factory';
-
-const _ = require('lodash');
+import _ from 'lodash';
 
 describe('FeedsController', () => {
   let feedController: FeedsController;
@@ -32,7 +30,7 @@ describe('FeedsController', () => {
         json: jest.fn(),
       };
 
-      let result: any[] = [];
+      const result: any[] = [];
       fakeFeedService.origins.forEach((origin) => {
         const feedsCount = _.random(1, 5);
         result.push(
@@ -75,7 +73,7 @@ describe('FeedsController', () => {
       const origin = _.sample(fakeFeedService.origins);
 
       const feedsCount = _.random(1, 5);
-      let result: any[] = fakeFeedService.createFeedsAndMakeStructureResponse(
+      const result: any[] = fakeFeedService.createFeedsAndMakeStructureResponse(
         feedsCount,
         origin,
       );
