@@ -51,6 +51,9 @@ export class FeedsService {
    * Creates a new feed and saves it to the database.
    *
    * @param {CreateFeedDto} createFeedDto
+   * @param {string} publishedAt
+   * @param {string} updatedAt
+   *
    * @return {Promise<Feed>}
    */
   async createFromExternal(
@@ -247,6 +250,8 @@ export class FeedsService {
    * Create error log function
    *
    * @param {string} message
+   * @param {object} error
+   * @param {string} url
    *
    * @return {Promise<Feed | null>}
    */
