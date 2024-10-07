@@ -3,12 +3,14 @@ import { FeedsService } from '../feeds.service';
 import { PageArticle } from './ScraperPageInterface';
 import { CreateFeedDto } from '../dto/create-feed.dto';
 import { EnumOrigin } from '../schemas/feed.schema';
+import { FeedLogService } from '../feeds.logs.service';
 
 export class ScraperPage {
   public browser: Browser;
   public page: Page;
   public agent: string;
   public feedService: FeedsService;
+  public feedLogService: FeedLogService;
   public excludeSections: string[];
 
   private launchOptions: PuppeteerLaunchOptions = {
@@ -27,6 +29,7 @@ export class ScraperPage {
    * @param {string} agent
    * @param {string[]} excludeSections
    * @param {FeedsService} feedService
+   * @param {FeedLogService} feedLogService
    */
   constructor(
     browser: Browser,
@@ -34,12 +37,14 @@ export class ScraperPage {
     agent: string,
     excludeSections: string[],
     feedService: FeedsService,
+    feedLogService: FeedLogService,
   ) {
     this.browser = browser;
     this.page = page;
     this.agent = agent;
     this.feedService = feedService;
     this.excludeSections = excludeSections;
+    this.feedLogService = feedLogService;
   }
 
   /**
@@ -61,11 +66,7 @@ export class ScraperPage {
     }>,
   ) {
     for (const article of pageWordArticles) {
-      try {
-        await this.processArticle(article, origin, extractArticleContent);
-      } catch (error) {
-        console.error(`Error processing article at ${article.url}:`, error);
-      }
+      await this.processArticle(article, origin, extractArticleContent);
     }
   }
 
@@ -124,7 +125,16 @@ export class ScraperPage {
         `processed new feed for the origin: ${origin} URL:: ${feed.url}`,
       );
     } catch (error) {
-      console.error(`Error processing article at ${article.url}:`, error);
+      console.error(
+        `Error processing article at ${article.url}:`,
+        error.message,
+      );
+      await this.feedLogService.create({
+        message: `Error processing article at ur;: ${article.url} :: Error: ${error.message}`,
+        url: article.url,
+        error,
+        createdAt: new Date().toISOString(),
+      });
     } finally {
       if (detailPage) {
         await detailPage.browser().close();
@@ -144,9 +154,11 @@ export class ScraperPage {
     const page: Page = await detailBrowser.newPage();
     await page.setUserAgent(this.agent);
 
+    await page.setDefaultNavigationTimeout(0);
+
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: 20000, // Increases timeout for slow pages.
+      timeout: 20000,
     });
     return page;
   }

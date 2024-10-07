@@ -9,6 +9,7 @@ import { ScraperTheCountryPage } from './country-page/ScraperTheCountryPage';
 import { ScraperTheWordPage } from './word-page/ScraperTheWordPage';
 import puppeteer, { Page, PuppeteerLaunchOptions } from 'puppeteer';
 import { FeedsService } from '../feeds.service';
+import { FeedLogService } from '../feeds.logs.service';
 
 @Injectable()
 export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
@@ -25,7 +26,10 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
     protocolTimeout: 40000,
   };
 
-  constructor(private readonly feedsService: FeedsService) {}
+  constructor(
+    private readonly feedsService: FeedsService,
+    private readonly feedLogService: FeedLogService,
+  ) {}
 
   async onModuleInit() {
     const cronExpression = process.env.INIT_SCRAPER_PAGES || '0 6 * * *';
@@ -76,6 +80,7 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
       this.agent,
       excludeSectionsPage,
       this.feedsService,
+      this.feedLogService,
     );
 
     await scrapeTheCountryPage.processPage();
@@ -98,6 +103,7 @@ export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
       this.agent,
       excludeSectionsPage,
       this.feedsService,
+      this.feedLogService,
     );
 
     await scrapeTheWordPage.processPage();

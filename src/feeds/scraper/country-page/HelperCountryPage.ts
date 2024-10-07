@@ -2,6 +2,7 @@ import { Page, Browser } from 'puppeteer';
 import { CategoryPage, PageArticle } from '../ScraperPageInterface';
 import { FeedsService } from '../../feeds.service';
 import { ScraperPage } from '../ScraperPage';
+import { FeedLogService } from 'src/feeds/feeds.logs.service';
 
 export class HelperCountryPage extends ScraperPage {
   constructor(
@@ -10,8 +11,9 @@ export class HelperCountryPage extends ScraperPage {
     agent: string,
     excludeSections: string[],
     feedService: FeedsService,
+    feedLogService: FeedLogService,
   ) {
-    super(browser, page, agent, excludeSections, feedService);
+    super(browser, page, agent, excludeSections, feedService, feedLogService);
   }
 
   /**
@@ -57,7 +59,7 @@ export class HelperCountryPage extends ScraperPage {
               const baseUrl = parts[2];
 
               return {
-                title: link.textContent?.trim() || '', // Aseguramos que no haya títulos null
+                title: link.textContent?.trim() || '',
                 url: link.href,
                 category: category,
                 baseUrl: baseUrl,

@@ -11,6 +11,8 @@ export class ScraperTheCountryPage
     try {
       await this.page.setUserAgent(this.agent);
 
+      await this.page.setDefaultNavigationTimeout(0);
+
       await this.page.goto(process.env.COUNTRY_PAGE ?? '', {
         waitUntil: 'networkidle2',
         timeout: 10000,
