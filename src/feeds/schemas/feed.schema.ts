@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument } from 'mongoose';
 
-export type CatDocument = HydratedDocument<Feed>;
+export type FeedDocument = HydratedDocument<Feed>;
 
 export enum EnumOrigin {
   COUNTRY_PAGE = 'the_country_page',
@@ -10,7 +10,9 @@ export enum EnumOrigin {
   LOCAL_PAGE = 'local_page',
 }
 
-@Schema()
+@Schema({
+  autoIndex: true,
+})
 export class Feed {
   @ApiProperty({
     description: 'Title of the feed',
@@ -38,7 +40,7 @@ export class Feed {
     description: 'URL of the feed',
     default: 'https://example.com/lorem-feed',
   })
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   url: string;
 
   @ApiProperty({
@@ -92,3 +94,5 @@ export class Feed {
 }
 
 export const FeedSchema = SchemaFactory.createForClass(Feed);
+
+FeedSchema.index({ url: 1 }, { unique: true });

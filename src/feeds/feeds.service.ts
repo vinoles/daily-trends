@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { EnumOrigin, Feed } from './schemas/feed.schema';
 import { UpdateFeedDto } from './dto/update-feed.dto';
+import { FeedLogService } from './feeds.logs.service';
 
 @Injectable()
 export class FeedsService {
@@ -14,6 +15,7 @@ export class FeedsService {
    */
   constructor(
     @InjectModel(Feed.name) private readonly feedModel: Model<Feed>,
+    private readonly feedLogService: FeedLogService,
   ) {}
 
   /**
@@ -23,16 +25,35 @@ export class FeedsService {
    * @return {Promise<Feed>}
    */
   async create(createFeedDto: CreateFeedDto): Promise<Feed> {
-    const publishedAt = new Date().toISOString();
-    const feedData = { ...createFeedDto, publishedAt };
-    const createdFeed = await this.feedModel.create(feedData);
-    return createdFeed;
+    try {
+      const publishedAt = new Date().toISOString();
+      const feedData = { ...createFeedDto, publishedAt };
+      const createdFeed = await this.feedModel.create(feedData);
+      return createdFeed;
+    } catch (error) {
+      const message =
+        error.code === 11000
+          ? 'Duplicate URL error during feed creation'
+          : error.message;
+
+      await this.createFeedLogError(message, error, createFeedDto.url);
+      if (error.code === 11000) {
+        const message = 'Duplicate URL error during feed creation';
+
+        throw new ConflictException(message);
+      }
+
+      throw error;
+    }
   }
 
   /**
    * Creates a new feed and saves it to the database.
    *
    * @param {CreateFeedDto} createFeedDto
+   * @param {string} publishedAt
+   * @param {string} updatedAt
+   *
    * @return {Promise<Feed>}
    */
   async createFromExternal(
@@ -40,9 +61,24 @@ export class FeedsService {
     publishedAt: string,
     updatedAt?: string,
   ): Promise<Feed> {
-    const feedData = { ...createFeedDto, publishedAt, updatedAt };
-    const createdFeed = await this.feedModel.create(feedData);
-    return createdFeed;
+    try {
+      const feedData = { ...createFeedDto, publishedAt, updatedAt };
+      const createdFeed = await this.feedModel.create(feedData);
+      return createdFeed;
+    } catch (error) {
+      const message =
+        error.code === 11000
+          ? 'Duplicate URL error during feed creation'
+          : error.message;
+
+      await this.createFeedLogError(message, error, createFeedDto.url);
+
+      if (error.code === 11000) {
+        throw new ConflictException(message);
+      }
+
+      throw error;
+    }
   }
 
   /**
@@ -208,5 +244,27 @@ export class FeedsService {
       console.error(`Error deleting the feed with ID ${id}:`, error);
       return null;
     }
+  }
+
+  /**
+   * Create error log function
+   *
+   * @param {string} message
+   * @param {object} error
+   * @param {string} url
+   *
+   * @return {Promise<Feed | null>}
+   */
+  private async createFeedLogError(
+    message: string,
+    error: object,
+    url?: string,
+  ): Promise<void> {
+    await this.feedLogService.create({
+      message,
+      url,
+      error,
+      createdAt: new Date().toISOString(),
+    });
   }
 }

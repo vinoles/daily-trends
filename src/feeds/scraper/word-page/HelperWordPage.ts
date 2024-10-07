@@ -2,6 +2,7 @@ import { Page, Browser } from 'puppeteer';
 import { PageArticle } from '../ScraperPageInterface';
 import { FeedsService } from '../../feeds.service';
 import { ScraperPage } from '../ScraperPage';
+import { FeedLogService } from 'src/feeds/feeds.logs.service';
 
 export class HelperWordPage extends ScraperPage {
   excludeUrls: string[] = [
@@ -14,8 +15,9 @@ export class HelperWordPage extends ScraperPage {
     agent: string,
     excludeSections: string[],
     feedService: FeedsService,
+    feedLogService: FeedLogService,
   ) {
-    super(browser, page, agent, excludeSections, feedService);
+    super(browser, page, agent, excludeSections, feedService, feedLogService);
   }
 
   private urlBasePge: string = process.env.WORD_BASE_PAGE || 'www.elmundo.es';
@@ -35,11 +37,11 @@ export class HelperWordPage extends ScraperPage {
         tag: element.tagName.toLowerCase(),
 
         links: Array.from(element.querySelectorAll('a')).map((link) => {
-          const url = link.href;
+          let url = link.href;
+          url = url.replace('#ancla_comentarios', '');
           const parts = url.split('/');
           const category = parts[3];
           const baseUrl = parts[2];
-          console.log(baseUrl, this.urlBasePge);
 
           return {
             title: link.textContent?.trim(),
