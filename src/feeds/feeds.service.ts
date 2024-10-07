@@ -243,10 +243,16 @@ export class FeedsService {
     }
   }
 
-  // Método para centralizar la creación del log
+  /**
+   * Create error log function
+   *
+   * @param {string} message
+   *
+   * @return {Promise<Feed | null>}
+   */
   private async createFeedLogError(
     message: string,
-    error: any,
+    error: object,
     url?: string,
   ): Promise<void> {
     await this.feedLogService.create({

@@ -73,6 +73,11 @@ exec-test:
 	@echo "💻 Running tests inside the container..."
 	docker-compose exec $(APP_SERVICE) npm run test
 
+# Run tests inside the container for file (example: make exec-test-file file="src/feeds/test/services/feeds.service.create.spec.ts")
+exec-test-file:
+	@echo "💻 Running tests inside the container for file..."
+	docker-compose exec $(APP_SERVICE) npm run test $(file)
+
 # Run any custom command inside the app container (example: 'make exec-cmd cmd="npm run lint"')
 exec-cmd:
 	@echo "💻 Running a custom command inside the application container..."

@@ -2,15 +2,21 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FeedsService } from '../feeds.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { FakeFeedsFactory } from './fake.feeds.factory';
+import { FeedLogService } from '../feeds.logs.service';
 
 export const createTestingFeedServiceModule =
   async (): Promise<TestingModule> => {
     return Test.createTestingModule({
       providers: [
         FeedsService,
+        FeedLogService,
         {
           provide: getModelToken('Feed'),
           useValue: mockFeedRepository,
+        },
+        {
+          provide: getModelToken('FeedLog'),
+          useValue: mockFeedLogRepository,
         },
         FakeFeedsFactory,
       ],
@@ -25,4 +31,8 @@ export const mockFeedRepository = {
   find: jest.fn(),
   findOne: jest.fn(),
   findByIdAndDelete: jest.fn(),
+};
+
+export const mockFeedLogRepository = {
+  create: jest.fn(),
 };
