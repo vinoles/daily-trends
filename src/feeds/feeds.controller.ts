@@ -18,7 +18,11 @@ import { UpdateFeedDto } from './dto/update-feed.dto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EnumOrigin } from './schemas/feed.schema';
 import { Response } from 'express';
-import { FeedResponseDto, FeedResponseListDto } from '../interfaces';
+import {
+  FeedResponseDto,
+  FeedResponseListDto,
+  SimpleResponseDto,
+} from '../interfaces';
 import { ScraperCron } from './scraper/ScraperCron';
 
 @Controller('feeds')
@@ -82,8 +86,8 @@ export class FeedsController {
   @ApiOperation({ summary: 'Process scraper pages' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'The scraper pages init',
-    type: FeedResponseDto,
+    description: 'Scraper has successfully started processing the pages.',
+    type: SimpleResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -101,7 +105,7 @@ export class FeedsController {
 
       return res.status(HttpStatus.OK).json({
         status: 'success',
-        data: { message: 'The scraper pages init' },
+        message: 'Scraper has successfully started processing the pages.',
       });
     } catch (error) {
       throw new HttpException(
