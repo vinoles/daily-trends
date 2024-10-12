@@ -12,8 +12,8 @@ import { FeedsService } from '../feeds.service';
 import { FeedLogService } from '../feeds.logs.service';
 
 @Injectable()
-export class ScraperServiceCron implements OnModuleInit, OnModuleDestroy {
-  private readonly logger = new Logger(ScraperServiceCron.name);
+export class ScraperCron implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(ScraperCron.name);
   private cronJob: CronJob;
   private agent: string =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';

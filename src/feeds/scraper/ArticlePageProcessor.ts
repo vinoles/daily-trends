@@ -1,12 +1,12 @@
 import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from 'puppeteer';
-import { FeedsService } from '../feeds.service';
-import { PageArticle } from './ScraperPageInterface';
 import { CreateFeedDto } from '../dto/create-feed.dto';
 import { EnumOrigin } from '../schemas/feed.schema';
+import { PageArticle } from './ScraperPageInterface';
+import { FeedsService } from '../feeds.service';
 import { FeedLogService } from '../feeds.logs.service';
 import { ExtractArticleDto } from '../dto/extract-article-dto';
 
-export class ScraperPage {
+export class ArticlePageProcessor {
   public browser: Browser;
   public page: Page;
   public agent: string;
@@ -126,7 +126,6 @@ export class ScraperPage {
       }
     }
   }
-
   /**
    * Open a detailed page for an article.
    *
@@ -146,58 +145,5 @@ export class ScraperPage {
       timeout: 20000,
     });
     return page;
-  }
-
-  /**
-   * Get the text content of an element on the page.
-   *
-   * @param {Page} page
-   * @param {string} selector
-   * @returns {Promise<string>}
-   */
-  public getTextContent = async (
-    page: Page,
-    selector: string,
-  ): Promise<string> => {
-    return await page.$eval(selector, (el) => el.textContent?.trim());
-  };
-
-  /**
-   * Get the text content of all elements that match the selector on the page.
-   * Concatenates the text from all matching elements.
-   *
-   * @param {Page} page
-   * @param {string} selector
-   * @returns {Promise<string>}
-   */
-  public getTextContentByList = async (
-    page: Page,
-    selector: string,
-  ): Promise<string> => {
-    return await page.$$eval(selector, (elements) =>
-      elements
-        .map((el) => `<p> ${el.textContent?.trim()} '</p>`)
-        .filter((text) => text.length > 0)
-        .join(' '),
-    );
-  };
-
-  /**
-   * Get the src attribute of an image on the page.
-   *
-   * @param {Page} page
-   * @param {string} selector
-   * @returns {Promise<string>}
-   */
-  public getImageSrc = async (
-    page: Page,
-    selector: string,
-  ): Promise<string> => {
-    return await page.$eval(selector, (el: any) => el.src);
-  };
-
-  public extractSegmentUrl(url: string) {
-    const parts = url.split('/');
-    return parts[4] || '';
   }
 }

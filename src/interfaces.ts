@@ -16,3 +16,11 @@ export class FeedResponseListDto {
   @ApiProperty({ type: [Feed] })
   data: Feed[];
 }
+
+export class SimpleResponseDto {
+  @ApiProperty({ example: 'success' })
+  status: string;
+
+  @ApiProperty({ example: 'Message example response.' })
+  message: string;
+}

@@ -1,13 +1,32 @@
-import { Page } from 'puppeteer';
-import { ScraperPageInterface } from '../ScraperPageInterface';
-import { HelperWordPage } from './HelperWordPage';
-import { EnumOrigin } from 'src/feeds/schemas/feed.schema';
-import { ExtractArticleDto } from 'src/feeds/dto/extract-article-dto';
+import { Browser, Page } from 'puppeteer';
+import { PageArticle, ScraperPageInterface } from '../ScraperPageInterface';
+import { EnumOrigin } from '../../schemas/feed.schema';
+import { ExtractArticleDto } from '../../dto/extract-article-dto';
+import { ServiceScraperPage } from '../ServiceScraperPage';
+import { FeedsService } from '../../feeds.service';
+import { FeedLogService } from '../../feeds.logs.service';
 
 export class ScraperTheWordPage
-  extends HelperWordPage
+  extends ServiceScraperPage
   implements ScraperPageInterface
 {
+  excludeUrls: string[] = [
+    'https://www.elmundo.es/deportes/futbol/primera-division/calendario.html',
+  ];
+
+  private urlBasePge: string = process.env.WORD_BASE_PAGE || 'www.elmundo.es';
+
+  constructor(
+    browser: Browser,
+    page: Page,
+    agent: string,
+    excludeSections: string[],
+    feedService: FeedsService,
+    feedLogService: FeedLogService,
+  ) {
+    super(browser, page, agent, excludeSections, feedService, feedLogService);
+  }
+
   async processPage(): Promise<void> {
     try {
       await this.page.setUserAgent(this.agent);
@@ -93,5 +112,50 @@ export class ScraperTheWordPage
       publishedAt,
       updatedAt,
     };
+  }
+
+  /**
+   * Get the regions of the page.
+   * Filters out regions that are excluded in excludeSections.
+   *
+   * @param {string} selector
+   * @returns {Promise<PageArticle[]>}
+   */
+  protected async getPageCategories(selector: string): Promise<PageArticle[]> {
+    this.page.waitForSelector(selector);
+
+    const sectionsLinks = await this.page.$$eval(selector, (elements) =>
+      elements.map((element) => ({
+        tag: element.tagName.toLowerCase(),
+
+        links: Array.from(element.querySelectorAll('a')).map((link) => {
+          let url = link.href;
+          url = url.replace('#ancla_comentarios', '');
+          const parts = url.split('/');
+          const category = parts[3];
+          const baseUrl = parts[2];
+
+          return {
+            title: link.textContent?.trim(),
+            url: link.href,
+            category: category,
+            baseUrl: baseUrl,
+          };
+        }),
+      })),
+    );
+
+    return sectionsLinks
+      .map((sectionLink) => {
+        return sectionLink.links.filter((link) => {
+          return (
+            link.baseUrl == this.urlBasePge &&
+            !link.category.includes('.html') &&
+            !this.excludeSections.includes(link.category) &&
+            !this.excludeUrls.includes(link.url)
+          );
+        });
+      })
+      .flat();
   }
 }
