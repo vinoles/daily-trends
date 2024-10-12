@@ -2,6 +2,7 @@ import { Page } from 'puppeteer';
 import { ScraperPageInterface } from '../ScraperPageInterface';
 import { HelperCountryPage } from './HelperCountryPage';
 import { EnumOrigin } from 'src/feeds/schemas/feed.schema';
+import { ExtractArticleDto } from 'src/feeds/dto/extract-article-dto';
 
 export class ScraperTheCountryPage
   extends HelperCountryPage
@@ -48,9 +49,9 @@ export class ScraperTheCountryPage
   /**
    * Extract the content of an article from the detail page.
    * @param {Page} detailPage
-   * @returns {Promise<Object>}
+   * @returns {Promise<ExtractArticleDto>}
    */
-  async extractArticleContent(detailPage: Page): Promise<object> {
+  async extractArticleContent(detailPage: Page): Promise<ExtractArticleDto> {
     const title = await this.getTextContent(
       detailPage,
       'body > article > header > div > h1',

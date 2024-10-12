@@ -4,6 +4,7 @@ import { PageArticle } from './ScraperPageInterface';
 import { CreateFeedDto } from '../dto/create-feed.dto';
 import { EnumOrigin } from '../schemas/feed.schema';
 import { FeedLogService } from '../feeds.logs.service';
+import { ExtractArticleDto } from '../dto/extract-article-dto';
 
 export class ScraperPage {
   public browser: Browser;
@@ -55,15 +56,7 @@ export class ScraperPage {
   protected async processArticles(
     pageWordArticles: PageArticle[],
     origin: EnumOrigin,
-    extractArticleContent: (page: Page) => Promise<{
-      title: string;
-      subtitle: string;
-      content: string;
-      author: string;
-      urlImage: string;
-      publishedAt: string;
-      updatedAt: string;
-    }>,
+    extractArticleContent: (page: Page) => Promise<ExtractArticleDto>,
   ) {
     for (const article of pageWordArticles) {
       await this.processArticle(article, origin, extractArticleContent);
@@ -80,15 +73,7 @@ export class ScraperPage {
   protected async processArticle(
     article: PageArticle,
     origin: EnumOrigin,
-    extractArticleContent: (page: Page) => Promise<{
-      title: string;
-      subtitle: string;
-      content: string;
-      author: string;
-      urlImage: string;
-      publishedAt: string;
-      updatedAt: string;
-    }>,
+    extractArticleContent: (page: Page) => Promise<ExtractArticleDto>,
   ) {
     let detailPage: Page | null = null;
     try {
