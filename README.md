@@ -15,13 +15,13 @@
 
 DailyTrends is a news aggregator API that provides users with a curated feed of the latest headlines from leading newspapers. The API focuses on delivering the top five headlines from two prominent Spanish newspapers, El País and El Mundo.
 
-## Project setup in Makefile
+## Project setup run
 
 ```bash
-$ make up
+$ make build or docker-compose up --build
 ```
 
-## Commands
+## Commands Makefile
 
 ```bash
 
