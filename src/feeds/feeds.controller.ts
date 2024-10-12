@@ -19,11 +19,15 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EnumOrigin } from './schemas/feed.schema';
 import { Response } from 'express';
 import { FeedResponseDto, FeedResponseListDto } from '../interfaces';
+import { ScraperCron } from './scraper/ScraperCron';
 
 @Controller('feeds')
 @ApiTags('Feeds')
 export class FeedsController {
-  constructor(private readonly feedsService: FeedsService) {}
+  constructor(
+    private readonly feedsService: FeedsService,
+    private readonly scraperCron: ScraperCron,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new feed' })
@@ -64,6 +68,42 @@ export class FeedsController {
           .status(HttpStatus.BAD_REQUEST)
           .json({ status: 'error', message: error.message });
       }
+      throw new HttpException(
+        {
+          status: 'error',
+          message: error.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('process-scraper')
+  @ApiOperation({ summary: 'Process scraper pages' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The scraper pages init',
+    type: FeedResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'An error occurred while creating the feed.',
+  })
+  /**
+   * Creates a new feed and saves it to the database.
+   *
+   * @param {Response} res
+   * @return {Promise<Response>}
+   */
+  async processScrapperService(@Res() res: Response): Promise<Response> {
+    try {
+      this.scraperCron.handleCron();
+
+      return res.status(HttpStatus.OK).json({
+        status: 'success',
+        data: { message: 'The scraper pages init' },
+      });
+    } catch (error) {
       throw new HttpException(
         {
           status: 'error',

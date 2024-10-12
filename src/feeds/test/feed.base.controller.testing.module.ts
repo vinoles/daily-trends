@@ -6,12 +6,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { FeedLogService } from '../feeds.logs.service';
 import { FeedLog, FeedLogSchema } from '../schemas/feed.logs.schema';
+import { ScraperCron } from '../scraper/ScraperCron';
 
 export const createTestingFeedControllerModule =
   async (): Promise<TestingModule> => {
     return Test.createTestingModule({
       controllers: [FeedsController],
-      providers: [FeedsService, FeedLogService],
+      providers: [FeedsService, FeedLogService, ScraperCron],
       imports: [
         ConfigModule.forRoot({
           envFilePath: '.env',
