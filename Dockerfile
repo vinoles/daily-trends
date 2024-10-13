@@ -42,6 +42,9 @@ RUN curl -fsSL https://dl.google.com/linux/direct/google-chrome-stable_current_a
 # Set environment variables for the executables of Chromium and Google Chrome
 ENV GOOGLE_CHROME_BIN=/usr/bin/google-chrome
 
+# Install NestJS CLI globally
+RUN npm install -g @nestjs/cli
+
 # Create the application directory
 WORKDIR /app
 
