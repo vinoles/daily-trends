@@ -10,7 +10,7 @@ up:
 # Build or rebuild services and start containers (useful after Dockerfile changes)
 build:
 	@echo "🔨 Building/rebuilding images and starting containers..."
-	docker compose up --build
+	docker compose up --build -d
 
 # Stop all running containers without removing them (containers can be restarted later)
 stop:

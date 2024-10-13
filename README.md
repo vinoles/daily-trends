@@ -19,6 +19,8 @@ DailyTrends is a news aggregator API that provides users with a curated feed of 
 
 ```bash
 $ make build or docker-compose up --build
+
+$ make exec-install
 ```
 
 ## Commands Makefile
