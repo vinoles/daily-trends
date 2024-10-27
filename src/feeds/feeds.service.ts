@@ -38,8 +38,6 @@ export class FeedsService {
 
       await this.createFeedLogError(message, error, createFeedDto.url);
       if (error.code === 11000) {
-        const message = 'Duplicate URL error during feed creation';
-
         throw new ConflictException(message);
       }
 
